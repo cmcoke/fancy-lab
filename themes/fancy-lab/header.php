@@ -30,7 +30,15 @@
 
             <div class="second-column col-9 col-sm-6">
               <div class="account">Account</div>
-              <nav class="main-menu">Menu</nav>
+              <nav class="main-menu">
+                <?php
+                wp_nav_menu(
+                  array(
+                    'theme_location'    => 'fancy_lab_main_menu'
+                  )
+                );
+                ?>
+              </nav>
             </div>
 
           </div>
