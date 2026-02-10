@@ -31,14 +31,49 @@ function fancy_lab_scripts()
 add_action('wp_enqueue_scripts', 'fancy_lab_scripts');
 
 
+
 function fancy_lab_config()
 {
+  // registers the main and footer menu
   register_nav_menus(
     array(
       'fancy_lab_main_menu'   => 'Fancy Lab Main Menu',
       'fancy_lab_footer_menu' => 'Fancy Lab Footer Menu',
     )
   );
-}
 
+  // Declare WooCommerce support for this theme and configure WooCommerce-specific settings
+  add_theme_support('woocommerce', array(
+    'thumbnail_image_width' => 255, // Sets the width (in pixels) for product thumbnail images (e.g., shop and archive pages)
+    'single_image_width'    => 255, // Sets the width (in pixels) for the main product image on single product pages
+
+    // Configure the default layout behavior for the WooCommerce product grid
+    'product_grid' => array(
+      'default_rows'    => 10, // Defines the default number of product rows displayed per page
+      'min_rows'        => 5,  // Sets the minimum number of rows allowed in the product grid
+      'max_rows'        => 10, // Sets the maximum number of rows allowed in the product grid
+      'default_columns' => 1,  // Defines the default number of product columns in the grid
+      'min_columns'     => 1,  // Sets the minimum number of columns allowed
+      'max_columns'     => 1,  // Sets the maximum number of columns allowed
+    )
+  ));
+
+  // Enables zoom functionality on the main product image in the product gallery
+  add_theme_support('wc-product-gallery-zoom');
+
+  // Enables a lightbox (modal overlay) when clicking product gallery images
+  add_theme_support('wc-product-gallery-lightbox');
+
+  // Enables a slider/carousel for navigating between product gallery images
+  add_theme_support('wc-product-gallery-slider');
+
+  // Define the maximum allowed width for content (in pixels) if it hasn’t already been set by the theme
+  if (! isset($content_width)) {
+    $content_width = 600;
+  }
+}
 add_action('after_setup_theme', 'fancy_lab_config', 0);
+
+
+// output the contents of the wc-modifications.php file
+require get_template_directory() . '/inc/wc-modifications.php';
