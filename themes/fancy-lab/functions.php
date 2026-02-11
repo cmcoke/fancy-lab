@@ -1,5 +1,9 @@
 <?php
 
+// Register Custom Navigation Walker
+require_once get_template_directory() . '/inc/class-wp-bootstrap-navwalker.php';
+
+
 function fancy_lab_scripts()
 {
 
@@ -75,5 +79,9 @@ function fancy_lab_config()
 add_action('after_setup_theme', 'fancy_lab_config', 0);
 
 
-// output the contents of the wc-modifications.php file
-require get_template_directory() . '/inc/wc-modifications.php';
+
+// If WooCommerce is installed and activated, load the theme's WooCommerce customizations
+if (class_exists('WooCommerce')) {
+  // Include the file that contains WooCommerce-specific modifications
+  require get_template_directory() . '/inc/wc-modifications.php';
+}
