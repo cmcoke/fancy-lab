@@ -3,6 +3,9 @@
 // Register Custom Navigation Walker
 require_once get_template_directory() . '/inc/class-wp-bootstrap-navwalker.php';
 
+// Includes the theme Customizer settings file
+require_once get_template_directory() . '/inc/customizer.php';
+
 
 function fancy_lab_scripts()
 {
@@ -71,6 +74,15 @@ function fancy_lab_config()
   // Enables a slider/carousel for navigating between product gallery images
   add_theme_support('wc-product-gallery-slider');
 
+  // Enables the use of custom logo for a theme
+  add_theme_support('custom-logo', array(
+    'height'     => 85,
+    'width'      => 160,
+    'flex-height'  => true,
+    'flex-width'  => true,
+  ));
+
+
   // Define the maximum allowed width for content (in pixels) if it hasn’t already been set by the theme
   if (! isset($content_width)) {
     $content_width = 600;
@@ -84,4 +96,43 @@ add_action('after_setup_theme', 'fancy_lab_config', 0);
 if (class_exists('WooCommerce')) {
   // Include the file that contains WooCommerce-specific modifications
   require get_template_directory() . '/inc/wc-modifications.php';
+}
+
+/**
+ * -------------------------------------------------------------
+ * AJAX Cart Fragment Update
+ * -------------------------------------------------------------
+ *
+ * Updates the cart item count in the header automatically
+ * when a product is added to the cart via AJAX.
+ *
+ * WooCommerce uses "cart fragments" to refresh specific
+ * parts of the page without reloading it.
+ *
+ * This function refreshes the <span class="items"> element
+ * so the cart quantity updates instantly.
+ * -------------------------------------------------------------
+ */
+
+// Hooks into WooCommerce AJAX cart fragments to modify/update parts of the page dynamically
+add_filter('woocommerce_add_to_cart_fragments', 'fancy_lab_woocommerce_header_add_to_cart_fragment');
+
+function fancy_lab_woocommerce_header_add_to_cart_fragment($fragments)
+{
+  // Accesses the global WooCommerce object (not required here, but commonly used for cart access)
+  global $woocommerce;
+
+  // Starts output buffering to capture HTML instead of sending it directly to the browser
+  ob_start();
+
+?>
+<!-- Outputs the updated cart item count inside the header cart icon -->
+<span class="items"><?php echo WC()->cart->get_cart_contents_count(); ?></span>
+<?php
+  // Stores the buffered HTML and assigns it to the cart fragment
+  // 'span.items' targets the element that will be replaced via AJAX
+  $fragments['span.items'] = ob_get_clean();
+
+  // Returns the updated fragments array back to WooCommerce
+  return $fragments;
 }
