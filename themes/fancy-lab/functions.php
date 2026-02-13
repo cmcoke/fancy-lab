@@ -34,6 +34,12 @@ function fancy_lab_scripts()
    *   media types (screen, print, etc.).
    */
   wp_enqueue_style('fancy-lab-style', get_stylesheet_uri(), array(), filemtime(get_template_directory() . '/style.css'), 'all');
+
+
+  // Flexslider Javascript and CSS files
+  wp_enqueue_script('flexslider-min-js', get_template_directory_uri() . '/inc/flexslider/jquery.flexslider-min.js', array('jquery'), '', true);
+  wp_enqueue_style('flexslider-css', get_template_directory_uri() . '/inc/flexslider/flexslider.css', array(), '', 'all');
+  wp_enqueue_script('flexslider-js', get_template_directory_uri() . '/inc/flexslider/flexslider.js', array('jquery'), '', true);
 }
 add_action('wp_enqueue_scripts', 'fancy_lab_scripts');
 
@@ -82,6 +88,41 @@ function fancy_lab_config()
     'flex-width'  => true,
   ));
 
+  /**
+   * Summary:
+   *
+   * Registers a custom image size for the theme that can be used
+   * when displaying featured images or media in templates.
+   *
+   * - add_image_size
+   *   WordPress function used to create a new custom image size.
+   *
+   * - 'fancy-lab-slider'
+   *   The unique name (slug) of the custom image size.
+   *   This name is later used in functions like:
+   *   the_post_thumbnail('fancy-lab-slider');
+   *
+   * - 1920
+   *   The image width in pixels.
+   *
+   * - 800
+   *   The image height in pixels.
+   *
+   * - array( 'center', 'center' )
+   *   Enables hard cropping and defines the crop position.
+   *   First value = horizontal position ('left', 'center', 'right')
+   *   Second value = vertical position ('top', 'center', 'bottom')
+   *   Here, the image is cropped from the exact center.
+   */
+
+  add_image_size(
+    'fancy-lab-slider',        // Custom image size name (used in templates)
+    1920,                      // Width in pixels
+    800,                       // Height in pixels
+    array('center', 'center')  // Hard crop from center (horizontal + vertical)
+  );
+
+
 
   // Define the maximum allowed width for content (in pixels) if it hasn’t already been set by the theme
   if (! isset($content_width)) {
@@ -126,8 +167,8 @@ function fancy_lab_woocommerce_header_add_to_cart_fragment($fragments)
   ob_start();
 
 ?>
-<!-- Outputs the updated cart item count inside the header cart icon -->
-<span class="items"><?php echo WC()->cart->get_cart_contents_count(); ?></span>
+  <!-- Outputs the updated cart item count inside the header cart icon -->
+  <span class="items"><?php echo WC()->cart->get_cart_contents_count(); ?></span>
 <?php
   // Stores the buffered HTML and assigns it to the cart fragment
   // 'span.items' targets the element that will be replaced via AJAX

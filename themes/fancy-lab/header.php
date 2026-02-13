@@ -23,8 +23,8 @@
 
       <section class="top-bar">
         <div class="container">
-          <div class="row">
-            <div class="brand col-md-3 col-12 col-lg-2 text-center text-md-left">
+          <div class="row d-flex align-items-center">
+            <div class="col-12 col-md-3 col-lg-2 brand text-center text-md-left">
               <a href="<?php echo home_url('/') ?>">
                 <!-- if the theme has a custom logo display it -->
                 <?php if (has_custom_logo()): ?>
@@ -36,7 +36,7 @@
                 <?php endif; ?>
               </a>
             </div>
-            <div class="second-column col-md-9 col-12 col-lg-10">
+            <div class="col-12 col-md-9 col-lg-10 second-column">
               <div class="row">
                 <!-- Check if the WooCommerce plugin is active before displaying account and cart features -->
                 <?php if (class_exists('WooCommerce')): ?>
