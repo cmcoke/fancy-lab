@@ -287,7 +287,176 @@ function fancy_lab_customizer($wp_customize)
       'type'      => 'url' // URL input field
     )
   );
+
+
+
+  /*--------------------------------------------------------------------------------*/
+
+  /**
+   * -------------------------------------------------------------
+   * Home Page Customizer Settings
+   * -------------------------------------------------------------
+   *
+   * Registers Customizer options that allow the admin to control:
+   *
+   * - Popular Products (number of products + columns)
+   * - New Arrivals (number of products + columns)
+   * - Deal of the Week (toggle display + product ID)
+   *
+   * All values are stored as theme_mods and can be retrieved
+   * using get_theme_mod() inside theme templates.
+   * -------------------------------------------------------------
+   */
+
+
+  // Creates a new section in the Theme Customizer for homepage settings
+  $wp_customize->add_section(
+    'sec_home_page', // Unique section ID used internally
+    array(
+      'title'      => 'Home Page Products and Blog Settings', // Section title displayed in Customizer
+      'description'  => 'Home Page Section' // Small description shown under section title
+    )
+  );
+
+
+  // Popular Products - Maximum number of products to display
+  $wp_customize->add_setting(
+    'set_popular_max_num', // Setting ID used with get_theme_mod()
+    array(
+      'type'          => 'theme_mod', // Stores value in theme modifications table
+      'default'        => '', // Default value if none is saved
+      'sanitize_callback'    => 'absint' // Ensures value is saved as a positive integer
+    )
+  );
+
+  // Adds number input field for Popular Products limit
+  $wp_customize->add_control(
+    'set_popular_max_num', // Links control to the above setting
+    array(
+      'label'      => 'Popular Products Max Number', // Label shown in Customizer
+      'description'  => 'Popular Products Max Number', // Help text under field
+      'section'    => 'sec_home_page', // Assigns control to homepage section
+      'type'      => 'number' // Renders an HTML number input field
+    )
+  );
+
+
+  // Popular Products - Number of columns to display
+  $wp_customize->add_setting(
+    'set_popular_max_col', // Setting ID for columns
+    array(
+      'type'          => 'theme_mod', // Stored as theme modification
+      'default'        => '', // Default empty value
+      'sanitize_callback'    => 'absint' // Forces integer value
+    )
+  );
+
+  // Adds number input for Popular Product columns
+  $wp_customize->add_control(
+    'set_popular_max_col', // Associates control with column setting
+    array(
+      'label'      => 'Popular Products Max Columns', // Control label
+      'description'  => 'Popular Products Max Columns', // Help text
+      'section'    => 'sec_home_page', // Section placement
+      'type'      => 'number' // Number input field
+    )
+  );
+
+
+  // New Arrivals - Maximum number of products
+  $wp_customize->add_setting(
+    'set_new_arrivals_max_num', // Setting ID
+    array(
+      'type'          => 'theme_mod', // Stored in theme mods
+      'default'        => '', // Default empty
+      'sanitize_callback'    => 'absint' // Convert to positive integer
+    )
+  );
+
+  // Adds number control for New Arrivals limit
+  $wp_customize->add_control(
+    'set_new_arrivals_max_num', // Connects to setting
+    array(
+      'label'      => 'New Arrivals Max Number', // Label
+      'description'  => 'New Arrivals Max Number', // Help text
+      'section'    => 'sec_home_page', // Customizer section
+      'type'      => 'number' // Number input
+    )
+  );
+
+
+  // New Arrivals - Number of columns
+  $wp_customize->add_setting(
+    'set_new_arrivals_max_col', // Setting ID
+    array(
+      'type'          => 'theme_mod', // Stored in theme mods
+      'default'        => '', // Default empty
+      'sanitize_callback'    => 'absint' // Ensure integer value
+    )
+  );
+
+  // Adds number control for New Arrivals columns
+  $wp_customize->add_control(
+    'set_new_arrivals_max_col', // Connects to setting
+    array(
+      'label'      => 'New Arrivals Max Columns', // Label text
+      'description'  => 'New Arrivals Max Columns', // Help description
+      'section'    => 'sec_home_page', // Section placement
+      'type'      => 'number' // Number input field
+    )
+  );
+
+
+  // Deal of the Week - Toggle visibility (checkbox)
+  $wp_customize->add_setting(
+    'set_deal_show', // Setting ID for showing deal section
+    array(
+      'type'          => 'theme_mod', // Stored in theme mods
+      'default'        => '', // Default empty (unchecked)
+      'sanitize_callback'    => 'fancy_lab_sanitize_checkbox' // Custom sanitize function for checkbox
+    )
+  );
+
+  // Adds checkbox control for Deal of the Week visibility
+  $wp_customize->add_control(
+    'set_deal_show', // Links control to checkbox setting
+    array(
+      'label'      => 'Show Deal of the Week?', // Checkbox label
+      'section'    => 'sec_home_page', // Section placement
+      'type'      => 'checkbox' // Renders checkbox input
+    )
+  );
+
+
+  // Deal of the Week - Product ID to display
+  $wp_customize->add_setting(
+    'set_deal', // Setting ID for selected product
+    array(
+      'type'          => 'theme_mod', // Stored in theme mods
+      'default'        => '', // Default empty
+      'sanitize_callback'    => 'absint' // Ensures saved value is an integer (product ID)
+    )
+  );
+
+  // Adds number control for entering Product ID
+  $wp_customize->add_control(
+    'set_deal', // Associates control with product ID setting
+    array(
+      'label'      => 'Deal of the Week Product ID', // Label text
+      'description'  => 'Product ID to Display', // Help text
+      'section'    => 'sec_home_page', // Section placement
+      'type'      => 'number' // Number input field
+    )
+  );
 }
 
 // Hooks the function into the Theme Customizer registration process
 add_action('customize_register', 'fancy_lab_customizer');
+
+
+// Sanitizes checkbox values to ensure true or false is saved
+function fancy_lab_sanitize_checkbox($checked)
+{
+  // Returns true only if checkbox is set and equals true; otherwise returns false
+  return ((isset($checked) && true == $checked) ? true : false);
+}

@@ -1820,3 +1820,19 @@ a img.aligncenter {
 .woocommerce-page .col2-set .col-2 {
   max-width: 100% !important;
 }
+
+/* Home page - 'Popular Products' & 'New Arrivals' buttons */
+.home .popular-products .woocommerce ul.products li.product .button,
+.home .new-arrivals .woocommerce ul.products li.product .button {
+  background-color: #d2335b;
+  color: #fff;
+  padding: 0.618em 1em;
+  margin: 0;
+  transition: 0.5s;
+}
+
+.home .popular-products .woocommerce ul.products li.product .button:hover,
+.home .new-arrivals .woocommerce ul.products li.product .button:hover {
+  background-color: #bb1942;
+  color: #fff;
+}
